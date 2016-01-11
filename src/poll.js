@@ -1,4 +1,4 @@
-import GitHubConnector from './connector';
+import GitLabConnector from './connector';
 import logger from '@hoist/logger';
 import Moment from 'moment'
 import errors from '@hoist/errors';
@@ -8,7 +8,7 @@ var ConnectorRequiresAuthorizationError = errors.create({
   name: 'ConnectorRequiresAuthorizationError'
 });
 
-class GitHubPoller {
+class GitLabPoller {
   constructor(context) {
     this._logger = logger.child({
       cls: this.constructor.name,
@@ -16,7 +16,7 @@ class GitHubPoller {
       application: context.application._id
     });
     this._context = context;
-    this._connector = new GitHubConnector(context.settings);
+    this._connector = new GitLabConnector(context.settings);
   }
   poll() {
     return this.assertCanPoll()
@@ -65,16 +65,15 @@ class GitHubPoller {
         return this._connector.authorize(this._context.authorization);
       }).then(() => {
         this._logger.info('creating webhook endpoint');
-        let hookUri = `https://${config.get('Hoist.domains.endpoint')}/${this._context.organisation.slug}/${this._context.application.slug}/${this._context.connectorKey}-incoming`;
-        this._connector.post(`/repos/${this._context.authorization.get('SubscriptionRepository')}/hooks`, {
-          "name": 'web',
-          "config": {
-            "url": hookUri,
-            "content_type": "json"
-          },
-          "events": [
-            "*"
-          ]
+        let hookUri = `https://${config.get('Hoist.domains.endpoint')}/connector/${this._context.authorization.key}`;
+        this._connector.post(`/projects/${this._context.authorization.get('SubscriptionProject')}/hooks`, {
+          "url":hookUri,
+          "push_events": true,
+          "issues_events": true,
+          "merge_requests_events": true,
+          "tag_push_events": true,
+          "note_events": true,
+          "build_events": true
         });
       }).then(() => {
         this._logger.info('webhooks created');
@@ -84,6 +83,6 @@ class GitHubPoller {
 }
 
 export default function (context) {
-  let poller = new GitHubPoller(context);
+  let poller = new GitLabPoller(context);
   return poller.poll();
 };

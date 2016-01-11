@@ -1,18 +1,18 @@
 [Unit]
-Description=Deployment for Github Connector
+Description=Deployment for GitLab Connector
 Requires=config.service
 After=config.service
 
 [Service]
 User=core
 Type=oneshot
-ExecStartPre=-/usr/bin/docker kill github-connector-deploy
-ExecStartPre=-/usr/bin/docker rm github-connector-deploy
-ExecStartPre=-/usr/bin/docker pull hoist/connector-github:master
-ExecStart=/usr/bin/docker run -h github-connector-deploy --name github-connector-deploy -e "ROOT_CONNECTOR_DIR=/shares/connectors" --volumes-from config -P hoist/connector-github:master
-ExecStop=/usr/bin/docker stop github-connector-deploy
-ExecStopPost=-/usr/bin/docker kill github-connector-deploy
-ExecStopPost=-/usr/bin/docker rm github-connector-deploy
+ExecStartPre=-/usr/bin/docker kill gitlab-connector-deploy
+ExecStartPre=-/usr/bin/docker rm gitlab-connector-deploy
+ExecStartPre=-/usr/bin/docker pull hoist/connector-gitlab:master
+ExecStart=/usr/bin/docker run -h gitlab-connector-deploy --name gitlab-connector-deploy -e "ROOT_CONNECTOR_DIR=/shares/connectors" --volumes-from config -P hoist/connector-gitlab:master
+ExecStop=/usr/bin/docker stop gitlab-connector-deploy
+ExecStopPost=-/usr/bin/docker kill gitlab-connector-deploy
+ExecStopPost=-/usr/bin/docker rm gitlab-connector-deploy
 TimeoutStartSec=30m
 
 [X-Fleet]

@@ -1,4 +1,4 @@
-hoist-connector-github
+hoist-connector-gitlab
 ===========================
 
-Hoist GitHub Connector
+Hoist GitLab Connector

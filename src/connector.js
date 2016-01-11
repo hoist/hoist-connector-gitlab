@@ -77,6 +77,9 @@ export default class GitLabConnector extends OAuth2ConnectorBase {
       return JSON.parse(result[0]);
     });
   }
+  intercept(authorization) {
+    return authorization.raise(this._configuration._connectorKey + ':new:event', authorization.payload);
+  }
 }
 
 /**
