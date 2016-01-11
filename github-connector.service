@@ -1,0 +1,19 @@
+[Unit]
+Description=Deployment for Github Connector
+Requires=config.service
+After=config.service
+
+[Service]
+User=core
+Type=oneshot
+ExecStartPre=-/usr/bin/docker kill github-connector-deploy
+ExecStartPre=-/usr/bin/docker rm github-connector-deploy
+ExecStartPre=-/usr/bin/docker pull hoist/connector-github:master
+ExecStart=/usr/bin/docker run -h github-connector-deploy --name github-connector-deploy -e "ROOT_CONNECTOR_DIR=/shares/connectors" --volumes-from config -P hoist/connector-github:master
+ExecStop=/usr/bin/docker stop github-connector-deploy
+ExecStopPost=-/usr/bin/docker kill github-connector-deploy
+ExecStopPost=-/usr/bin/docker rm github-connector-deploy
+TimeoutStartSec=30m
+
+[X-Fleet]
+MachineMetadata=container_type=web
