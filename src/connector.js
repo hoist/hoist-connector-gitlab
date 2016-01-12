@@ -21,6 +21,7 @@ export default class GitLabConnector extends OAuth2ConnectorBase {
   constructor (configuration) {
     super(merge({}, configuration, overrides));
     this._clientId = configuration.clientId;
+    this._configuration = configuration;
   }
 
   /**
