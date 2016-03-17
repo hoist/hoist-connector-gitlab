@@ -9,12 +9,14 @@
   <script src="script/prettify/prettify.js"></script>
   
   
+  <script src="script/manual.js"></script>
 </head>
-<body class="layout-container">
+<body class="layout-container" data-ice="rootContainer">
 
 <header>
   <a href="./">Home</a>
-  <a href="identifiers.html">Identifier</a>
+  
+  <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
   <a data-ice="repoURL" href="https://github.com/hoist/hoist-connector-gitlab.git" class="repo-url-github">Repository</a>
@@ -27,39 +29,18 @@
   </div>
 </header>
 
-<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
-  <h2>Class</h2>
+<nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="classDoc"><span><a href="class/src/connector.js~GitLabConnector.html">GitLabConnector</a></span></li>
-</ul>
-</div>
-
-
-
-<div data-ice="functionWrap">
-  <h2><a href="function/">Function</a></h2>
-  <ul>
-    
-  <li data-ice="functionDoc"><span><a href="function/index.html#static-function-poll">poll</a></span></li>
-</ul>
-</div>
-
-
-
-
-
-<div data-ice="externalWrap">
-  <h2>External</h2>
-  <ul>
-    
-  <li data-ice="externalDoc"><span><a href="https://doc.esdoc.org/github.com/hoist/oauth-connector/class/src/oauth2_connector.js~OAuth2ConnectorBase.html">OAuth2ConnectorBase</a></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/connector.js~GitLabConnector.html">GitLabConnector</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-poll">poll</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://doc.esdoc.org/github.com/hoist/oauth-connector/class/src/oauth2_connector.js~OAuth2ConnectorBase.html">OAuth2ConnectorBase</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/poll.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import GitHubConnector from &apos;./connector&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import GitLabConnector from &apos;./connector&apos;;
 import logger from &apos;@hoist/logger&apos;;
 import Moment from &apos;moment&apos;
 import errors from &apos;@hoist/errors&apos;;
@@ -69,7 +50,7 @@ var ConnectorRequiresAuthorizationError = errors.create({
   name: &apos;ConnectorRequiresAuthorizationError&apos;
 });
 
-class GitHubPoller {
+class GitLabPoller {
   constructor(context) {
     this._logger = logger.child({
       cls: this.constructor.name,
@@ -77,7 +58,7 @@ class GitHubPoller {
       application: context.application._id
     });
     this._context = context;
-    this._connector = new GitHubConnector(context.settings);
+    this._connector = new GitLabConnector(context.settings);
   }
   poll() {
     return this.assertCanPoll()
@@ -109,8 +90,8 @@ class GitHubPoller {
           this._context.subscription.delayTill(new Moment().add(1, &apos;hour&apos;).toDate());
           throw new ConnectorRequiresAuthorizationError();
         }
-        if (!this._context.authorization.get(&apos;SubscriptionRepository&apos;)) {
-          this._logger.warn(&apos;Connector needs a subscription repository and none set&apos;);
+        if (!this._context.authorization.get(&apos;SubscriptionProject&apos;)) {
+          this._logger.warn(&apos;Connector needs a subscription project and none set&apos;);
           //we&apos;ve already setup this subscription
           this._context.subscription.delayTill(new Moment().add(1, &apos;hour&apos;).toDate());
           throw new ConnectorRequiresAuthorizationError();
@@ -126,16 +107,15 @@ class GitHubPoller {
         return this._connector.authorize(this._context.authorization);
       }).then(() =&gt; {
         this._logger.info(&apos;creating webhook endpoint&apos;);
-        let hookUri = `https://${config.get(&apos;Hoist.domains.endpoint&apos;)}/${this._context.organisation.slug}/${this._context.application.slug}/${this._context.connectorKey}-incoming`;
-        this._connector.post(`/repos/${this._context.authorization.get(&apos;SubscriptionRepository&apos;)}/hooks`, {
-          &quot;name&quot;: &apos;web&apos;,
-          &quot;config&quot;: {
-            &quot;url&quot;: hookUri,
-            &quot;content_type&quot;: &quot;json&quot;
-          },
-          &quot;events&quot;: [
-            &quot;*&quot;
-          ]
+        let hookUri = `https://${config.get(&apos;Hoist.domains.endpoint&apos;)}/connector/${this._context.authorization._token.key}`;
+        this._connector.post(`/projects/${this._context.authorization.get(&apos;SubscriptionProject&apos;)}/hooks`, {
+          &quot;url&quot;:hookUri,
+          &quot;push_events&quot;: true,
+          &quot;issues_events&quot;: true,
+          &quot;merge_requests_events&quot;: true,
+          &quot;tag_push_events&quot;: true,
+          &quot;note_events&quot;: true,
+          &quot;build_events&quot;: true
         });
       }).then(() =&gt; {
         this._logger.info(&apos;webhooks created&apos;);
@@ -145,7 +125,7 @@ class GitHubPoller {
 }
 
 export default function (context) {
-  let poller = new GitHubPoller(context);
+  let poller = new GitLabPoller(context);
   return poller.poll();
 };
 </code></pre>
@@ -153,7 +133,7 @@ export default function (context) {
 </div>
 
 <footer class="footer">
-  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.2.6)</span></a>
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.6)</span></a>
 </footer>
 
 <script src="script/search_index.js"></script>

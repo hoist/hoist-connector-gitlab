@@ -294,6 +294,12 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
+    "builtinexternal/webapiexternal.js~audiocontext",
+    "external/index.html",
+    "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "external"
+  ],
+  [
     "builtinexternal/webapiexternal.js~canvasrenderingcontext2d",
     "external/index.html",
     "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
@@ -459,6 +465,12 @@ window.esdocSearchIndex = [
     "src/connector.js~gitlabconnector#get",
     "class/src/connector.js~GitLabConnector.html#instance-method-get",
     "src/connector.js~GitLabConnector#get",
+    "method"
+  ],
+  [
+    "src/connector.js~gitlabconnector#intercept",
+    "class/src/connector.js~GitLabConnector.html#instance-method-intercept",
+    "src/connector.js~GitLabConnector#intercept",
     "method"
   ],
   [

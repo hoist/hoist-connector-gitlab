@@ -1,5 +1,6 @@
 [
   {
+    "__docId__": 0,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -9,9 +10,10 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "import {OAuth2ConnectorBase} from '@hoist/oauth-connector';\nimport {merge} from 'lodash';\n\nlet overrides = {\n  baseSite: 'https://gitlab.com',\n  accessTokenPath: '/oauth/token'\n};\nlet apiBaseUri = 'https://gitlab.com/api/v3'\n/**\n   * A Hoist Connector for connecting to GitLab\n   * @extends {OAuth2ConnectorBase}\n   */\nexport default class GitLabConnector extends OAuth2ConnectorBase {\n\n  /**\n   * create a new connector\n   * @param {object} configuration - the configuration properties to use\n   * @param {string} configuration.clientId - the OAuth2 client id\n   * @param {string} configuration.clientSecret - the OAuth2 client secret\n   */\n  constructor (configuration) {\n    super(merge({}, configuration, overrides));\n    this._clientId = configuration.clientId;\n  }\n\n  /**\n   * @private\n   * @param AuthorizationStore authorization the users authorisation store\n   * @returns Promise<object> an object containing key value pairs to send with the client to the authorization url\n   */\n  _authorizeParams (authorization) {\n    return super._authorizeParams(authorization).then((params) => {\n      params.response_type = \"code\";\n      return params;\n    });\n  }\n  //use authorization params as it has redirect uri\n  _accessParams (authorization) {\n    return super._authorizeParams(authorization).then((params) => {\n      return params || {};\n    }).then((params) => {\n      params.grant_type = \"authorization_code\"\n      return params;\n    });\n  }\n  static defaultSettings () {\n    return Promise.resolve({});\n  }\n\n  get (path) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('GET', uri).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  post (path, body) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('POST', uri, body).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  put (path, body) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('PUT', uri, body).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  patch (path, body) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('PATCH', uri, body).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  delete (path) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('DELETE', uri).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n}\n\n/**\n * @external {OAuth2ConnectorBase} https://doc.esdoc.org/github.com/hoist/oauth-connector/class/src/oauth2_connector.js~OAuth2ConnectorBase.html\n */\n"
+    "content": "import {OAuth2ConnectorBase} from '@hoist/oauth-connector';\nimport {merge} from 'lodash';\n\nlet overrides = {\n  baseSite: 'https://gitlab.com',\n  accessTokenPath: '/oauth/token'\n};\nlet apiBaseUri = 'https://gitlab.com/api/v3'\n/**\n   * A Hoist Connector for connecting to GitLab\n   * @extends {OAuth2ConnectorBase}\n   */\nexport default class GitLabConnector extends OAuth2ConnectorBase {\n\n  /**\n   * create a new connector\n   * @param {object} configuration - the configuration properties to use\n   * @param {string} configuration.clientId - the OAuth2 client id\n   * @param {string} configuration.clientSecret - the OAuth2 client secret\n   */\n  constructor (configuration) {\n    super(merge({}, configuration, overrides));\n    this._clientId = configuration.clientId;\n    this._configuration = configuration;\n  }\n\n  /**\n   * @private\n   * @param AuthorizationStore authorization the users authorisation store\n   * @returns Promise<object> an object containing key value pairs to send with the client to the authorization url\n   */\n  _authorizeParams (authorization) {\n    return super._authorizeParams(authorization).then((params) => {\n      params.response_type = \"code\";\n      return params;\n    });\n  }\n  //use authorization params as it has redirect uri\n  _accessParams (authorization) {\n    return super._authorizeParams(authorization).then((params) => {\n      return params || {};\n    }).then((params) => {\n      params.grant_type = \"authorization_code\"\n      return params;\n    });\n  }\n  static defaultSettings () {\n    return Promise.resolve({});\n  }\n\n  get (path) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('GET', uri).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  post (path, body) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('POST', uri, body).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  put (path, body) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('PUT', uri, body).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  patch (path, body) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('PATCH', uri, body).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  delete (path) {\n    let uri = `${apiBaseUri}${path}`;\n    return this._performRequest('DELETE', uri).then((result) => {\n      return JSON.parse(result[0]);\n    });\n  }\n  intercept(authorization) {\n    return authorization.raise(this._configuration._connectorKey + ':new:event', authorization.payload);\n  }\n}\n\n/**\n * @external {OAuth2ConnectorBase} https://doc.esdoc.org/github.com/hoist/oauth-connector/class/src/oauth2_connector.js~OAuth2ConnectorBase.html\n */\n"
   },
   {
+    "__docId__": 1,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -32,6 +34,7 @@
     }
   },
   {
+    "__docId__": 2,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -52,6 +55,7 @@
     }
   },
   {
+    "__docId__": 3,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -70,6 +74,7 @@
     ]
   },
   {
+    "__docId__": 4,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -78,9 +83,10 @@
     "memberof": "src/connector.js",
     "longname": "src/connector.js~OAuth2ConnectorBase",
     "access": null,
-    "description": null
+    "description": ""
   },
   {
+    "__docId__": 5,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -125,6 +131,7 @@
     "generator": false
   },
   {
+    "__docId__": 6,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -142,6 +149,25 @@
     }
   },
   {
+    "__docId__": 7,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "_configuration",
+    "memberof": "src/connector.js~GitLabConnector",
+    "longname": "src/connector.js~GitLabConnector#_configuration",
+    "access": null,
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 8,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -149,8 +175,8 @@
     "memberof": "src/connector.js~GitLabConnector",
     "longname": "src/connector.js~GitLabConnector#_authorizeParams",
     "access": "private",
-    "description": null,
-    "lineNumber": 31,
+    "description": "",
+    "lineNumber": 32,
     "unknown": [
       {
         "tagName": "@returns",
@@ -180,6 +206,7 @@
     "generator": false
   },
   {
+    "__docId__": 9,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -188,7 +215,7 @@
     "longname": "src/connector.js~GitLabConnector#_accessParams",
     "access": null,
     "description": null,
-    "lineNumber": 38,
+    "lineNumber": 39,
     "undocument": true,
     "params": [
       {
@@ -206,6 +233,7 @@
     "generator": false
   },
   {
+    "__docId__": 10,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -214,7 +242,7 @@
     "longname": "src/connector.js~GitLabConnector.defaultSettings",
     "access": null,
     "description": null,
-    "lineNumber": 46,
+    "lineNumber": 47,
     "undocument": true,
     "params": [],
     "return": {
@@ -225,6 +253,7 @@
     "generator": false
   },
   {
+    "__docId__": 11,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -233,7 +262,7 @@
     "longname": "src/connector.js~GitLabConnector#get",
     "access": null,
     "description": null,
-    "lineNumber": 50,
+    "lineNumber": 51,
     "undocument": true,
     "params": [
       {
@@ -251,6 +280,7 @@
     "generator": false
   },
   {
+    "__docId__": 12,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -259,7 +289,7 @@
     "longname": "src/connector.js~GitLabConnector#post",
     "access": null,
     "description": null,
-    "lineNumber": 56,
+    "lineNumber": 57,
     "undocument": true,
     "params": [
       {
@@ -283,6 +313,7 @@
     "generator": false
   },
   {
+    "__docId__": 13,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -291,7 +322,7 @@
     "longname": "src/connector.js~GitLabConnector#put",
     "access": null,
     "description": null,
-    "lineNumber": 62,
+    "lineNumber": 63,
     "undocument": true,
     "params": [
       {
@@ -315,6 +346,7 @@
     "generator": false
   },
   {
+    "__docId__": 14,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -323,7 +355,7 @@
     "longname": "src/connector.js~GitLabConnector#patch",
     "access": null,
     "description": null,
-    "lineNumber": 68,
+    "lineNumber": 69,
     "undocument": true,
     "params": [
       {
@@ -347,6 +379,7 @@
     "generator": false
   },
   {
+    "__docId__": 15,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -355,7 +388,7 @@
     "longname": "src/connector.js~GitLabConnector#delete",
     "access": null,
     "description": null,
-    "lineNumber": 74,
+    "lineNumber": 75,
     "undocument": true,
     "params": [
       {
@@ -373,6 +406,34 @@
     "generator": false
   },
   {
+    "__docId__": 16,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "intercept",
+    "memberof": "src/connector.js~GitLabConnector",
+    "longname": "src/connector.js~GitLabConnector#intercept",
+    "access": null,
+    "description": null,
+    "lineNumber": 81,
+    "undocument": true,
+    "params": [
+      {
+        "name": "authorization",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 17,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -382,9 +443,10 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "import GitHubConnector from './connector';\nimport logger from '@hoist/logger';\nimport Moment from 'moment'\nimport errors from '@hoist/errors';\nimport config from 'config';\n\nvar ConnectorRequiresAuthorizationError = errors.create({\n  name: 'ConnectorRequiresAuthorizationError'\n});\n\nclass GitHubPoller {\n  constructor(context) {\n    this._logger = logger.child({\n      cls: this.constructor.name,\n      subscription: context.subscription._id,\n      application: context.application._id\n    });\n    this._context = context;\n    this._connector = new GitHubConnector(context.settings);\n  }\n  poll() {\n    return this.assertCanPoll()\n      .then((hooksSetup) => {\n        if (!hooksSetup) {\n          return this.setupHook();\n        }\n      }).catch((err) => {\n        this._logger.error(err);\n        if (!(err instanceof ConnectorRequiresAuthorizationError)) {\n          this._logger.alert(err);\n        }\n      });\n  }\n  assertCanPoll() {\n    var hooksSetup = this._context.subscription.get('setup');\n    return Promise.resolve()\n      .then(() => {\n        if (hooksSetup) {\n          //we've already setup this subscription\n          this._context.subscription.delayTill(new Moment().add(100, 'days').toDate());\n        }\n      })\n      .then(() => {\n        this._logger.info('checking credentials');\n        if (!(this._context.authorization)) {\n          this._logger.warn('Connector needs auth and no auth set');\n          //we've already setup this subscription\n          this._context.subscription.delayTill(new Moment().add(1, 'hour').toDate());\n          throw new ConnectorRequiresAuthorizationError();\n        }\n        if (!this._context.authorization.get('SubscriptionRepository')) {\n          this._logger.warn('Connector needs a subscription repository and none set');\n          //we've already setup this subscription\n          this._context.subscription.delayTill(new Moment().add(1, 'hour').toDate());\n          throw new ConnectorRequiresAuthorizationError();\n        }\n      }).then(() => {\n        return hooksSetup;\n      });\n  }\n  setupHook() {\n    return Promise.resolve()\n      .then(() => {\n        this._logger.info('setting connector authorization');\n        return this._connector.authorize(this._context.authorization);\n      }).then(() => {\n        this._logger.info('creating webhook endpoint');\n        let hookUri = `https://${config.get('Hoist.domains.endpoint')}/${this._context.organisation.slug}/${this._context.application.slug}/${this._context.connectorKey}-incoming`;\n        this._connector.post(`/repos/${this._context.authorization.get('SubscriptionRepository')}/hooks`, {\n          \"name\": 'web',\n          \"config\": {\n            \"url\": hookUri,\n            \"content_type\": \"json\"\n          },\n          \"events\": [\n            \"*\"\n          ]\n        });\n      }).then(() => {\n        this._logger.info('webhooks created');\n        return this._context.subscription.set('setup', true);\n      });\n  }\n}\n\nexport default function (context) {\n  let poller = new GitHubPoller(context);\n  return poller.poll();\n};\n"
+    "content": "import GitLabConnector from './connector';\nimport logger from '@hoist/logger';\nimport Moment from 'moment'\nimport errors from '@hoist/errors';\nimport config from 'config';\n\nvar ConnectorRequiresAuthorizationError = errors.create({\n  name: 'ConnectorRequiresAuthorizationError'\n});\n\nclass GitLabPoller {\n  constructor(context) {\n    this._logger = logger.child({\n      cls: this.constructor.name,\n      subscription: context.subscription._id,\n      application: context.application._id\n    });\n    this._context = context;\n    this._connector = new GitLabConnector(context.settings);\n  }\n  poll() {\n    return this.assertCanPoll()\n      .then((hooksSetup) => {\n        if (!hooksSetup) {\n          return this.setupHook();\n        }\n      }).catch((err) => {\n        this._logger.error(err);\n        if (!(err instanceof ConnectorRequiresAuthorizationError)) {\n          this._logger.alert(err);\n        }\n      });\n  }\n  assertCanPoll() {\n    var hooksSetup = this._context.subscription.get('setup');\n    return Promise.resolve()\n      .then(() => {\n        if (hooksSetup) {\n          //we've already setup this subscription\n          this._context.subscription.delayTill(new Moment().add(100, 'days').toDate());\n        }\n      })\n      .then(() => {\n        this._logger.info('checking credentials');\n        if (!(this._context.authorization)) {\n          this._logger.warn('Connector needs auth and no auth set');\n          //we've already setup this subscription\n          this._context.subscription.delayTill(new Moment().add(1, 'hour').toDate());\n          throw new ConnectorRequiresAuthorizationError();\n        }\n        if (!this._context.authorization.get('SubscriptionProject')) {\n          this._logger.warn('Connector needs a subscription project and none set');\n          //we've already setup this subscription\n          this._context.subscription.delayTill(new Moment().add(1, 'hour').toDate());\n          throw new ConnectorRequiresAuthorizationError();\n        }\n      }).then(() => {\n        return hooksSetup;\n      });\n  }\n  setupHook() {\n    return Promise.resolve()\n      .then(() => {\n        this._logger.info('setting connector authorization');\n        return this._connector.authorize(this._context.authorization);\n      }).then(() => {\n        this._logger.info('creating webhook endpoint');\n        let hookUri = `https://${config.get('Hoist.domains.endpoint')}/connector/${this._context.authorization._token.key}`;\n        this._connector.post(`/projects/${this._context.authorization.get('SubscriptionProject')}/hooks`, {\n          \"url\":hookUri,\n          \"push_events\": true,\n          \"issues_events\": true,\n          \"merge_requests_events\": true,\n          \"tag_push_events\": true,\n          \"note_events\": true,\n          \"build_events\": true\n        });\n      }).then(() => {\n        this._logger.info('webhooks created');\n        return this._context.subscription.set('setup', true);\n      });\n  }\n}\n\nexport default function (context) {\n  let poller = new GitLabPoller(context);\n  return poller.poll();\n};\n"
   },
   {
+    "__docId__": 18,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -405,12 +467,13 @@
     }
   },
   {
+    "__docId__": 19,
     "kind": "class",
     "static": true,
     "variation": null,
-    "name": "GitHubPoller",
+    "name": "GitLabPoller",
     "memberof": "src/poll.js",
-    "longname": "src/poll.js~GitHubPoller",
+    "longname": "src/poll.js~GitLabPoller",
     "access": null,
     "export": false,
     "importPath": "hoist-connector-gitlab/src/poll.js",
@@ -421,12 +484,13 @@
     "interface": false
   },
   {
+    "__docId__": 20,
     "kind": "constructor",
     "static": false,
     "variation": null,
     "name": "constructor",
-    "memberof": "src/poll.js~GitHubPoller",
-    "longname": "src/poll.js~GitHubPoller#constructor",
+    "memberof": "src/poll.js~GitLabPoller",
+    "longname": "src/poll.js~GitLabPoller#constructor",
     "access": null,
     "description": null,
     "lineNumber": 12,
@@ -442,12 +506,13 @@
     "generator": false
   },
   {
+    "__docId__": 21,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "_logger",
-    "memberof": "src/poll.js~GitHubPoller",
-    "longname": "src/poll.js~GitHubPoller#_logger",
+    "memberof": "src/poll.js~GitLabPoller",
+    "longname": "src/poll.js~GitLabPoller#_logger",
     "access": null,
     "description": null,
     "lineNumber": 13,
@@ -459,12 +524,13 @@
     }
   },
   {
+    "__docId__": 22,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "_context",
-    "memberof": "src/poll.js~GitHubPoller",
-    "longname": "src/poll.js~GitHubPoller#_context",
+    "memberof": "src/poll.js~GitLabPoller",
+    "longname": "src/poll.js~GitLabPoller#_context",
     "access": null,
     "description": null,
     "lineNumber": 18,
@@ -476,12 +542,13 @@
     }
   },
   {
+    "__docId__": 23,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "_connector",
-    "memberof": "src/poll.js~GitHubPoller",
-    "longname": "src/poll.js~GitHubPoller#_connector",
+    "memberof": "src/poll.js~GitLabPoller",
+    "longname": "src/poll.js~GitLabPoller#_connector",
     "access": null,
     "description": null,
     "lineNumber": 19,
@@ -493,12 +560,13 @@
     }
   },
   {
+    "__docId__": 24,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "poll",
-    "memberof": "src/poll.js~GitHubPoller",
-    "longname": "src/poll.js~GitHubPoller#poll",
+    "memberof": "src/poll.js~GitLabPoller",
+    "longname": "src/poll.js~GitLabPoller#poll",
     "access": null,
     "description": null,
     "lineNumber": 21,
@@ -512,12 +580,13 @@
     "generator": false
   },
   {
+    "__docId__": 25,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "assertCanPoll",
-    "memberof": "src/poll.js~GitHubPoller",
-    "longname": "src/poll.js~GitHubPoller#assertCanPoll",
+    "memberof": "src/poll.js~GitLabPoller",
+    "longname": "src/poll.js~GitLabPoller#assertCanPoll",
     "access": null,
     "description": null,
     "lineNumber": 34,
@@ -531,12 +600,13 @@
     "generator": false
   },
   {
+    "__docId__": 26,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "setupHook",
-    "memberof": "src/poll.js~GitHubPoller",
-    "longname": "src/poll.js~GitHubPoller#setupHook",
+    "memberof": "src/poll.js~GitLabPoller",
+    "longname": "src/poll.js~GitLabPoller#setupHook",
     "access": null,
     "description": null,
     "lineNumber": 61,
@@ -550,6 +620,7 @@
     "generator": false
   },
   {
+    "__docId__": 27,
     "kind": "function",
     "static": true,
     "variation": null,
@@ -561,7 +632,7 @@
     "importPath": "hoist-connector-gitlab/src/poll.js",
     "importStyle": "poll",
     "description": null,
-    "lineNumber": 86,
+    "lineNumber": 85,
     "undocument": true,
     "params": [
       {
@@ -579,6 +650,7 @@
     "generator": false
   },
   {
+    "__docId__": 29,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -587,10 +659,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 30,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -599,10 +672,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 31,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -611,10 +685,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 32,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -623,10 +698,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 33,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -635,10 +711,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 34,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -647,10 +724,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 35,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -659,10 +737,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 36,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -671,10 +750,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 37,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -683,10 +763,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 38,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -695,10 +776,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 39,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -707,10 +789,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 40,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -719,10 +802,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 41,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -731,10 +815,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 42,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -743,10 +828,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 43,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -755,10 +841,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 44,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -767,10 +854,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 45,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -779,10 +867,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 46,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -791,10 +880,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 47,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -803,10 +893,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 48,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -815,10 +906,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 49,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -827,10 +919,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 50,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -839,10 +932,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 51,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -851,10 +945,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 52,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -863,10 +958,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 53,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -875,10 +971,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 54,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -887,10 +984,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 55,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -899,10 +997,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 56,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -911,10 +1010,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 57,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -923,10 +1023,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 58,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -935,10 +1036,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 59,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -947,10 +1049,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 60,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -959,10 +1062,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 61,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -971,10 +1075,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 62,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -983,10 +1088,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 63,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -995,10 +1101,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 64,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1007,10 +1114,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 65,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1019,10 +1127,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 66,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1031,10 +1140,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 67,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1043,10 +1153,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 68,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1055,10 +1166,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 69,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1067,10 +1179,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 70,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1079,10 +1192,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 71,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1091,10 +1205,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 72,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1103,10 +1218,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 73,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1115,10 +1231,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 74,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1127,10 +1244,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 75,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1139,10 +1257,11 @@
     "memberof": "BuiltinExternal/ECMAScriptExternal.js",
     "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 77,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1151,10 +1270,11 @@
     "memberof": "BuiltinExternal/WebAPIExternal.js",
     "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 78,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1163,10 +1283,11 @@
     "memberof": "BuiltinExternal/WebAPIExternal.js",
     "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 79,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1175,10 +1296,11 @@
     "memberof": "BuiltinExternal/WebAPIExternal.js",
     "longname": "BuiltinExternal/WebAPIExternal.js~Element",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 80,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1187,10 +1309,11 @@
     "memberof": "BuiltinExternal/WebAPIExternal.js",
     "longname": "BuiltinExternal/WebAPIExternal.js~Event",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 81,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1199,10 +1322,11 @@
     "memberof": "BuiltinExternal/WebAPIExternal.js",
     "longname": "BuiltinExternal/WebAPIExternal.js~Node",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 82,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1211,10 +1335,11 @@
     "memberof": "BuiltinExternal/WebAPIExternal.js",
     "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 83,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1223,10 +1348,24 @@
     "memberof": "BuiltinExternal/WebAPIExternal.js",
     "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
     "access": null,
-    "description": null,
+    "description": "",
     "builtinExternal": true
   },
   {
+    "__docId__": 84,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 85,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -1239,6 +1378,7 @@
     "content": "import GitLabConnector from '../../lib/connector';\nimport sinon from 'sinon';\nimport config from 'config';\nimport {expect} from 'chai';\nimport Nightmare from 'nightmare';\nimport url from 'url';\nimport os from 'os';\n\nlet osType = os.type();\ndescribe('authorization steps', function () {\n  let connector;\n  let clientId = config.get('clientId');\n  let clientSecret = config.get('clientSecret');\n  let nightmare;\n\n  before(function () {\n    if (osType !== 'Linux') {\n      nightmare = Nightmare({show: true});\n    }\n    connector = new GitLabConnector({clientId, clientSecret});\n\n  });\n  after(function () {\n    if (osType !== 'Linux') {\n      return nightmare.end();\n    }\n  })\n  describe('on first bounce', () => {\n    let bounce;\n    before(function () {\n\n      bounce = {\n        get: function () {\n          return undefined;\n        },\n        delete: function () {\n          return Promise.resolve(null);\n        },\n        set: function () {\n          console.log('set', arguments);\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      sinon.spy(bounce, 'get');\n      sinon.spy(bounce, 'set');\n      sinon.spy(bounce, 'redirect');\n      return connector.receiveBounce(bounce);\n    });\n    it('should save current step', () => {\n      return expect(bounce.set).to.have.been.calledWith('currentStep', 'authorization');\n    });\n    it('should receive a redirect', () => {\n      return expect(bounce.redirect).to.have.been.calledWith(`https://gitlab.com/oauth/authorize?redirect_uri=https%3A%2F%2Fbouncer.hoist.test%2Fbounce&response_type=code&client_id=${clientId}`);\n    });\n  });\n  describe('on return from gitlab', function () {\n    let bounce;\n    this.timeout(50000);\n    let uri;\n\n    before(function () {\n      if (osType === 'Linux') {\n        this.skip();\n      }\n      bounce = {\n        store: {},\n        get: function (key) {\n          return this.store[key];\n        },\n        delete: function (key) {\n          delete this.store[key];\n          return Promise.resolve(null);\n        },\n        set: function (key, value) {\n          this.store[key] = value;\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      sinon.spy(bounce, 'get');\n      sinon.spy(bounce, 'set');\n      sinon.spy(bounce, 'redirect');\n      return Promise.resolve(connector.receiveBounce(bounce)).then(function () {\n        let authorizeUri = bounce.redirect.getCall(0).args[0];\n        return Promise.resolve(nightmare.goto(authorizeUri));\n      }).then(() => {\n        return Promise.resolve(nightmare.type('#user_login', config.get('username')).type('#user_password', config.get('password')).click('[name=\"commit\"]'));\n      }).then(() => {\n        return Promise.race([\n          Promise.resolve(nightmare.wait('[value=\"Authorize\"]')).then(() => {\n            return Promise.resolve(nightmare.click('[value=\"Authorize\"]'))\n          }).then(() => {\n            return Promise.resolve(nightmare.wait('#message').url());\n          }),\n          Promise.resolve(nightmare.wait('#message').url())\n        ]).then((u) => {\n          console.log(u);\n        });\n      }).then((u) => {\n        console.log(u);\n        uri = url.parse(u, true);\n        bounce.query = uri.query;\n      }).then(() => {\n        return connector.receiveBounce(bounce);\n      });\n\n    });\n    it('should save state', () => {\n      //console.log(bounce.store['AccessToken']);\n      return expect(bounce.store['AccessToken']).to.exist;\n    });\n  })\n});\n"
   },
   {
+    "__docId__": 86,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1252,6 +1392,7 @@
     "lineNumber": 10
   },
   {
+    "__docId__": 87,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1265,6 +1406,7 @@
     "lineNumber": 28
   },
   {
+    "__docId__": 88,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1278,6 +1420,7 @@
     "lineNumber": 57
   },
   {
+    "__docId__": 89,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1291,6 +1434,7 @@
     "lineNumber": 60
   },
   {
+    "__docId__": 90,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1304,6 +1448,7 @@
     "lineNumber": 64
   },
   {
+    "__docId__": 91,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1317,6 +1462,7 @@
     "lineNumber": 123
   },
   {
+    "__docId__": 92,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -1329,6 +1475,7 @@
     "content": "import GitLabConnector from '../../lib/connector';\nimport config from 'config';\nimport {\n  expect\n}\nfrom 'chai';\ndescribe('issues api', function () {\n  this.timeout(5000);\n  describe('post issue', () => {\n    let authorization;\n    let _result;\n    let connector;\n    let title = \"Issue created by Unit Test: \" + new Date();\n    before(() => {\n      authorization = {\n        store: {},\n        get: function (key) {\n          return this.store[key];\n        },\n        delete: function (key) {\n          delete this.store[key];\n          return Promise.resolve(null);\n        },\n        set: function (key, value) {\n          this.store[key] = value;\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      connector = new GitLabConnector({\n        clientId: config.get('clientId'),\n        clientSecret: config.get('clientSecret')\n      });\n      authorization.set('AccessToken', config.get('accessToken'));\n      connector.authorize(authorization)\n      return connector.post('/projects/741037/issues', {\n          \"title\": title,\n          \"description\": \"This is a test issue from the Hoist connector unit tests\"\n        })\n        .then((result) => {\n          _result = result;\n        });\n\n    });\n    it('returns correct response', () => {\n      return expect(_result.title).to.eql(title);\n    });\n  });\n  describe('get issues', () => {\n    let authorization;\n    let _result;\n    let connector;\n    before(() => {\n      authorization = {\n        store: {},\n        get: function (key) {\n          return this.store[key];\n        },\n        delete: function (key) {\n          delete this.store[key];\n          return Promise.resolve(null);\n        },\n        set: function (key, value) {\n          this.store[key] = value;\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      connector = new GitLabConnector({\n        clientId: config.get('clientId'),\n        clientSecret: config.get('clientSecret')\n      });\n      authorization.set('AccessToken', config.get('accessToken'));\n      connector.authorize(authorization)\n      return connector.get('/projects/741037/issues')\n        .then((result) => {\n          _result = result;\n        });\n\n    });\n    it('returns correct response', () => {\n      return expect(_result.length).to.be.greaterThan(0);\n    });\n  });\n  describe('patch issue', () => {\n    let authorization;\n    let _result;\n    let connector;\n    before(() => {\n      authorization = {\n        store: {},\n        get: function (key) {\n          return this.store[key];\n        },\n        delete: function (key) {\n          delete this.store[key];\n          return Promise.resolve(null);\n        },\n        set: function (key, value) {\n          this.store[key] = value;\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      connector = new GitLabConnector({\n        clientId: config.get('clientId'),\n        clientSecret: config.get('clientSecret')\n      });\n      authorization.set('AccessToken', config.get('accessToken'));\n      connector.authorize(authorization)\n\n      return connector.get('/projects/741037/issues?state=opened')\n        .then((r) => {\n          let uri = `/projects/741037/issues/${r[0].id}`\n          return connector.put(uri, {\n              \"state_event\": \"close\"\n            })\n            .then((result) => {\n              _result = result;\n            }).catch((err) => {\n              console.log(err);\n            });\n        });\n\n\n    });\n    it('returns correct response', () => {\n      return expect(_result.state).to.eql('closed');\n    });\n  });\n});\n"
   },
   {
+    "__docId__": 93,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1342,6 +1489,7 @@
     "lineNumber": 7
   },
   {
+    "__docId__": 94,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1355,6 +1503,7 @@
     "lineNumber": 9
   },
   {
+    "__docId__": 95,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1368,6 +1517,7 @@
     "lineNumber": 52
   },
   {
+    "__docId__": 96,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1381,6 +1531,7 @@
     "lineNumber": 56
   },
   {
+    "__docId__": 97,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1394,6 +1545,7 @@
     "lineNumber": 95
   },
   {
+    "__docId__": 98,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1407,6 +1559,7 @@
     "lineNumber": 99
   },
   {
+    "__docId__": 99,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1420,6 +1573,7 @@
     "lineNumber": 148
   },
   {
+    "__docId__": 100,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -1432,6 +1586,7 @@
     "content": "import GitLabConnector from '../../lib/connector';\nimport config from 'config';\nimport {\n  expect\n}\nfrom 'chai';\ndescribe('get projects', function () {\n  this.timeout(5000);\n  let authorization;\n  let _result;\n  let connector;\n  before(() => {\n    authorization = {\n      store: {},\n      get: function (key) {\n        return this.store[key];\n      },\n      delete: function (key) {\n        delete this.store[key];\n        return Promise.resolve(null);\n      },\n      set: function (key, value) {\n        this.store[key] = value;\n        return Promise.resolve(null);\n      },\n      redirect: function () {\n        console.log('redirect', arguments);\n        return Promise.resolve(null);\n      },\n      done: function () {\n        console.log('done', arguments);\n        return Promise.resolve(null);\n      }\n    };\n    connector = new GitLabConnector({\n      clientId: config.get('clientId'),\n      clientSecret: config.get('clientSecret')\n    });\n    authorization.set('AccessToken', config.get('accessToken'));\n    connector.authorize(authorization)\n    return connector.get('/projects')\n      .then((result) => {\n        console.log(result);\n        _result = result;\n      });\n\n  });\n  it('returns users projects', () => {\n    return expect(_result.map((project) => project.name)).to.contain('test');\n  });\n});\n"
   },
   {
+    "__docId__": 101,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1445,6 +1600,7 @@
     "lineNumber": 7
   },
   {
+    "__docId__": 102,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1458,6 +1614,7 @@
     "lineNumber": 48
   },
   {
+    "__docId__": 103,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -1470,6 +1627,7 @@
     "content": "import GitLabConnector from '../../lib/connector';\nimport config from 'config';\nimport {expect} from 'chai';\ndescribe('webhook api', function () {\n  this.timeout(5000);\n  describe('create a webhook', () => {\n    let authorization;\n    let _result;\n    let connector;\n    let title = \"Issue created by Unit Test: \" + new Date();\n    before(() => {\n      authorization = {\n        store: {},\n        get: function (key) {\n          return this.store[key];\n        },\n        delete: function (key) {\n          delete this.store[key];\n          return Promise.resolve(null);\n        },\n        set: function (key, value) {\n          this.store[key] = value;\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      connector = new GitLabConnector({clientId: config.get('clientId'), clientSecret: config.get('clientSecret')});\n      authorization.set('AccessToken', config.get('accessToken'));\n      connector.authorize(authorization)\n      return connector.post('/projects/741037/hooks', {\n        \"url\": \"https://endpoint.hoi.test/test-hook-\" + Math.random() * 2000,\n        \"push_events\": true,\n        \"issues_events\": true,\n        \"merge_requests_events\": true,\n        \"tag_push_events\": true,\n        \"note_events\": true,\n        \"build_events\": true\n      }).then((result) => {\n        _result = result;\n      });\n\n    });\n    it('creates the webhook', () => {\n      return expect(_result.id).to.exist;\n    });\n  });\n  describe('list webhook', () => {\n    let authorization;\n    let _result;\n    let connector;\n    let title = \"Issue created by Unit Test: \" + new Date();\n    before(() => {\n      authorization = {\n        store: {},\n        get: function (key) {\n          return this.store[key];\n        },\n        delete: function (key) {\n          delete this.store[key];\n          return Promise.resolve(null);\n        },\n        set: function (key, value) {\n          this.store[key] = value;\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      connector = new GitLabConnector({clientId: config.get('clientId'), clientSecret: config.get('clientSecret')});\n      authorization.set('AccessToken', config.get('accessToken'));\n      connector.authorize(authorization)\n      return connector.get('/projects/741037/hooks').then((result) => {\n        _result = result;\n      });\n\n    });\n    it('returns the webhook', () => {\n      return expect(_result.length).to.be.greaterThan(0);\n    });\n  });\n  describe('delete webhook', () => {\n    let authorization;\n    let _result;\n    let connector;\n    let title = \"Issue created by Unit Test: \" + new Date();\n    before(() => {\n      authorization = {\n        store: {},\n        get: function (key) {\n          return this.store[key];\n        },\n        delete: function (key) {\n          delete this.store[key];\n          return Promise.resolve(null);\n        },\n        set: function (key, value) {\n          this.store[key] = value;\n          return Promise.resolve(null);\n        },\n        redirect: function () {\n          console.log('redirect', arguments);\n          return Promise.resolve(null);\n        },\n        done: function () {\n          console.log('done', arguments);\n          return Promise.resolve(null);\n        }\n      };\n      connector = new GitLabConnector({clientId: config.get('clientId'), clientSecret: config.get('clientSecret')});\n      authorization.set('AccessToken', config.get('accessToken'));\n      connector.authorize(authorization)\n      return connector.get('/projects/741037/hooks').then((result) => {\n        var uri = `/projects/741037/hooks/${result[0].id}`\n        return connector.delete(uri);\n      }).then((result) => {\n        _result = result;\n      });\n\n    });\n    it('returns the webhook', () => {\n      return expect(_result.id).to.exist;\n    });\n  });\n});\n"
   },
   {
+    "__docId__": 104,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1483,6 +1641,7 @@
     "lineNumber": 4
   },
   {
+    "__docId__": 105,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1496,6 +1655,7 @@
     "lineNumber": 6
   },
   {
+    "__docId__": 106,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1509,6 +1669,7 @@
     "lineNumber": 50
   },
   {
+    "__docId__": 107,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1522,6 +1683,7 @@
     "lineNumber": 54
   },
   {
+    "__docId__": 108,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1535,6 +1697,7 @@
     "lineNumber": 90
   },
   {
+    "__docId__": 109,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1548,6 +1711,7 @@
     "lineNumber": 94
   },
   {
+    "__docId__": 110,
     "kind": "testIt",
     "static": true,
     "variation": null,
@@ -1561,6 +1725,7 @@
     "lineNumber": 133
   },
   {
+    "__docId__": 111,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -1573,6 +1738,7 @@
     "content": "import GitLabConnector from '../../lib/connector';\nimport {\n  expect\n}\nfrom 'chai';\ndescribe('default settings', () => {\n  let connector;\n  it('exposes defaultSettings method', () => {\n    return expect(GitLabConnector.defaultSettings).to.exist;\n  });\n})\n"
   },
   {
+    "__docId__": 112,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
@@ -1586,6 +1752,7 @@
     "lineNumber": 6
   },
   {
+    "__docId__": 113,
     "kind": "testIt",
     "static": true,
     "variation": null,
