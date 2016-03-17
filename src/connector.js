@@ -51,31 +51,31 @@ export default class GitLabConnector extends OAuth2ConnectorBase {
   get (path) {
     let uri = `${apiBaseUri}${path}`;
     return this._performRequest('GET', uri).then((result) => {
-      return JSON.parse(result[0]);
+      return JSON.parse(result);
     });
   }
   post (path, body) {
     let uri = `${apiBaseUri}${path}`;
     return this._performRequest('POST', uri, body).then((result) => {
-      return JSON.parse(result[0]);
+      return JSON.parse(result);
     });
   }
   put (path, body) {
     let uri = `${apiBaseUri}${path}`;
     return this._performRequest('PUT', uri, body).then((result) => {
-      return JSON.parse(result[0]);
+      return JSON.parse(result);
     });
   }
   patch (path, body) {
     let uri = `${apiBaseUri}${path}`;
     return this._performRequest('PATCH', uri, body).then((result) => {
-      return JSON.parse(result[0]);
+      return JSON.parse(result);
     });
   }
   delete (path) {
     let uri = `${apiBaseUri}${path}`;
     return this._performRequest('DELETE', uri).then((result) => {
-      return JSON.parse(result[0]);
+      return JSON.parse(result);
     });
   }
   intercept(authorization) {
