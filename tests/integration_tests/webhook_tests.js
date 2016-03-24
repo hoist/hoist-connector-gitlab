@@ -2,7 +2,7 @@ import GitLabConnector from '../../lib/connector';
 import config from 'config';
 import {expect} from 'chai';
 describe('webhook api', function () {
-  this.timeout(5000);
+  this.timeout(10000);
   describe('create a webhook', () => {
     let authorization;
     let _result;
@@ -23,11 +23,9 @@ describe('webhook api', function () {
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
           return Promise.resolve(null);
         }
       };
@@ -71,11 +69,9 @@ describe('webhook api', function () {
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
           return Promise.resolve(null);
         }
       };
@@ -111,11 +107,9 @@ describe('webhook api', function () {
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
           return Promise.resolve(null);
         }
       };

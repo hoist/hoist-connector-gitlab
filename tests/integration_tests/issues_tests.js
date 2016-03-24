@@ -5,7 +5,7 @@ import {
 }
 from 'chai';
 describe('issues api', function () {
-  this.timeout(5000);
+  this.timeout(10000);
   describe('post issue', () => {
     let authorization;
     let _result;
@@ -26,11 +26,9 @@ describe('issues api', function () {
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
           return Promise.resolve(null);
         }
       };
@@ -72,11 +70,9 @@ describe('issues api', function () {
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
           return Promise.resolve(null);
         }
       };
@@ -115,11 +111,9 @@ describe('issues api', function () {
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
           return Promise.resolve(null);
         }
       };

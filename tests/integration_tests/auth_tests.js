@@ -44,15 +44,15 @@ describe('authorization steps', function () {
           return Promise.resolve(null);
         },
         set: function () {
-          console.log('set', arguments);
+
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
+
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
+
           return Promise.resolve(null);
         }
       };
@@ -91,11 +91,11 @@ describe('authorization steps', function () {
           return Promise.resolve(null);
         },
         redirect: function () {
-          console.log('redirect', arguments);
+
           return Promise.resolve(null);
         },
         done: function () {
-          console.log('done', arguments);
+
           return Promise.resolve(null);
         }
       };
@@ -110,7 +110,7 @@ describe('authorization steps', function () {
       }).then(() => {
         return nightmare.wait('#message').url();
       }).then((u) => {
-        console.log(u);
+
         uri = url.parse(u, true);
         bounce.query = uri.query;
       }).then(() => {
@@ -119,7 +119,7 @@ describe('authorization steps', function () {
 
     });
     it('should save state', () => {
-      //console.log(bounce.store['AccessToken']);
+      
       return expect(bounce.store['AccessToken']).to.exist;
     });
   })

@@ -24,11 +24,9 @@ describe('get projects', function () {
         return Promise.resolve(null);
       },
       redirect: function () {
-        console.log('redirect', arguments);
         return Promise.resolve(null);
       },
       done: function () {
-        console.log('done', arguments);
         return Promise.resolve(null);
       }
     };
@@ -40,7 +38,6 @@ describe('get projects', function () {
     connector.authorize(authorization)
     return connector.get('/projects')
       .then((result) => {
-        console.log(result);
         _result = result;
       });
 
