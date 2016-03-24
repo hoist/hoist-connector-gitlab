@@ -1,7 +1,9 @@
 import GitLabConnector from '../../lib/connector';
 import sinon from 'sinon';
 import config from 'config';
-import {expect} from 'chai';
+import {
+  expect
+} from 'chai';
 import Nightmare from 'nightmare';
 import url from 'url';
 import os from 'os';
@@ -15,9 +17,14 @@ describe('authorization steps', function () {
 
   before(function () {
     if (osType !== 'Linux') {
-      nightmare = Nightmare({show: true});
+      nightmare = Nightmare({
+        show: true
+      });
     }
-    connector = new GitLabConnector({clientId, clientSecret});
+    connector = new GitLabConnector({
+      clientId,
+      clientSecret
+    });
 
   });
   after(function () {
@@ -101,16 +108,7 @@ describe('authorization steps', function () {
       }).then(() => {
         return Promise.resolve(nightmare.type('#user_login', config.get('username')).type('#user_password', config.get('password')).click('[name="commit"]'));
       }).then(() => {
-        return Promise.race([
-          Promise.resolve(nightmare.wait('[value="Authorize"]')).then(() => {
-            return Promise.resolve(nightmare.click('[value="Authorize"]'))
-          }).then(() => {
-            return Promise.resolve(nightmare.wait('#message').url());
-          }),
-          Promise.resolve(nightmare.wait('#message').url())
-        ]).then((u) => {
-          console.log(u);
-        });
+        return nightmare.wait('#message').url();
       }).then((u) => {
         console.log(u);
         uri = url.parse(u, true);
