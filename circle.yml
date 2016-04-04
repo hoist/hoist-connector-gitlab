@@ -21,7 +21,7 @@ dependencies:
     - "~/docker"
   override:
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-    - docker pull hoist/connector-gitlab:${CIRCLE_BRANCH//feature\//}
+    - docker pull hoist/connector-gitlab:${CIRCLE_BRANCH//feature\//}; true;
     - docker build -t hoist/connector-gitlab:${CIRCLE_BRANCH//feature\//} .
 test:
   override:
